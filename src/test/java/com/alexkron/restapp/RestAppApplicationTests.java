@@ -1,10 +1,10 @@
-package com.alexkron.vitasoft;
+package com.alexkron.restapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VitasoftApplicationTests {
+class RestAppApplicationTests {
 
     @Test
     void contextLoads() {

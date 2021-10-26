@@ -1,24 +1,25 @@
-package com.alexkron.vitasoft.entity;
+package com.alexkron.restapp.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
 @Entity
 @Data
 @AllArgsConstructor
-public class Phones {
+@NoArgsConstructor
+public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", columnDefinition = "BIGINT")
-    private BigInteger id;
+    private Long id;
 
-    @Column(name = "NUMBER", columnDefinition = "CHAR(12)", unique = true)
+    @Column(name = "NUMBER", columnDefinition = "VARCHAR(12)", unique = true, nullable = false)
     private String number;
 
-    @ManyToOne(targetEntity = Users.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
-    private  Users user;
+    private User user;
 }

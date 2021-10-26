@@ -1,13 +1,13 @@
-package com.alexkron.vitasoft;
+package com.alexkron.restapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VitasoftApplication {
+public class RestAppApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VitasoftApplication.class, args);
+        SpringApplication.run(RestAppApplication.class, args);
     }
 
 }

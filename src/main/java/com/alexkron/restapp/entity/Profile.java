@@ -1,26 +1,27 @@
-package com.alexkron.vitasoft.entity;
+package com.alexkron.restapp.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.javamoney.moneta.Money;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
 @Entity
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "PROFILES")
-public class Profiles {
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", columnDefinition = "BIGINT")
-    private BigInteger id;
+    private Long id;
 
-    @Column(name = "CASH", columnDefinition = "MONEY")
-    private Money money;
+    @Column(name = "CASH", columnDefinition = "MONEY", nullable = false)
+    private Money cash;
 
-    @ManyToOne(targetEntity = Users.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
-    private  Users user;
+    private User user;
 }
