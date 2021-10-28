@@ -10,16 +10,17 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "PHONES")
 public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", columnDefinition = "BIGINT")
-    private Long id;
+    private Long pholeId;
 
     @Column(name = "NUMBER", columnDefinition = "VARCHAR(12)", unique = true, nullable = false)
     private String number;
 
-    @ManyToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
     private User user;
 }

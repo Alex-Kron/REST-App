@@ -6,21 +6,21 @@ import com.alexkron.restapp.entity.Role;
 import com.alexkron.restapp.entity.User;
 import org.javamoney.moneta.Money;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface UserService {
-    User setUser(User user);
 
     Phone setPhone(Phone phone);
 
     Profile setProfile(Profile profile);
 
-    User updateUser(Long userId, String name, LocalDate age, String email);
+    User updateUser(Long userId, String login, String password, String name, LocalDate age, String email);
 
-    Phone updatePhone(Long userId, String phone);
+    Phone updatePhone(Long phoneId, String phone);
 
-    Profile updateProfile(Long userId, Money cash);
+    Profile updateProfile(Long userId, BigDecimal cash);
 
     User getUser(Long userId);
 
@@ -30,9 +30,9 @@ public interface UserService {
 
     Phone getPhone(Long phoneId);
 
-    Profile getProfile(Long userId);
+    User getUserByLogin(String login);
 
-    User removeUser(Long userId);
+    Profile getProfile(Long userId);
 
     Phone removePhone(Long phoneId);
 

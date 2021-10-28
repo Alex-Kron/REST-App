@@ -8,12 +8,13 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "ROLES")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", columnDefinition = "INTEGER")
-    private Integer id;
+    private Integer roleId;
 
-    @Column(name = "ROLE_NAME", columnDefinition = "VARCHAR(5)", unique = true, nullable = false)
+    @Column(name = "ROLE_NAME", columnDefinition = "VARCHAR(20)", unique = true, nullable = false)
     private String roleName;
 }
