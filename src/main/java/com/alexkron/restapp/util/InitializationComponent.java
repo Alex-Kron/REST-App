@@ -24,7 +24,7 @@ public class InitializationComponent {
         User admin1 = new User();
         admin1.setLogin("admin1");
         admin1.setPassword("adminpas1");
-        admin1.setName("Admin Number One");
+        admin1.setName("Админ Номер Один");
         admin1.setAge(LocalDate.of(1990, 12, 31));
         admin1.setEmail("admin1@email.com");
         adminService.setUser(admin1);
@@ -33,7 +33,7 @@ public class InitializationComponent {
         User user1 = new User();
         user1.setLogin("user1");
         user1.setPassword("userpas1");
-        user1.setName("User Number One");
+        user1.setName("Юзер Номер Один");
         user1.setAge(LocalDate.of(2000, 12, 31));
         user1.setEmail("user1@email.com");
         adminService.setUser(user1);

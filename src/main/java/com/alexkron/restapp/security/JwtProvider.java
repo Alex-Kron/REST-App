@@ -3,12 +3,12 @@ package com.alexkron.restapp.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Component
@@ -18,7 +18,7 @@ public class JwtProvider {
     private String jwtSecret;
 
     public String generateToken(String login) {
-        Date date = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(ZonedDateTime.now().plusMinutes(30).toInstant());
         log.info("Token generation...");
         return Jwts.builder()
                 .setSubject(login)
@@ -27,6 +27,7 @@ public class JwtProvider {
                 .compact();
     }
 
+    @SneakyThrows
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);

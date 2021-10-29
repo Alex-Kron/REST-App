@@ -4,7 +4,6 @@ import com.alexkron.restapp.entity.Phone;
 import com.alexkron.restapp.entity.Profile;
 import com.alexkron.restapp.entity.Role;
 import com.alexkron.restapp.entity.User;
-import org.javamoney.moneta.Money;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
