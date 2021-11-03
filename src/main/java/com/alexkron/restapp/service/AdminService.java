@@ -2,7 +2,6 @@ package com.alexkron.restapp.service;
 
 import com.alexkron.restapp.entity.Role;
 import com.alexkron.restapp.entity.User;
-import com.alexkron.restapp.exception.RoleNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

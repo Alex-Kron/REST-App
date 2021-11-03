@@ -9,6 +9,8 @@ import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -56,7 +58,6 @@ public class User {
     private String email;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
     @ToString.Exclude
     @JsonIgnore
     private Profile profile;

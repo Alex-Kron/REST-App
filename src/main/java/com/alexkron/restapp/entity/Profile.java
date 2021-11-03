@@ -30,8 +30,7 @@ public class Profile {
     @Digits(integer = 6, fraction = 2)
     private BigDecimal cash;
 
-    @OneToOne(optional = false, cascade = CascadeType.REFRESH)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(optional = false, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private User user;
 }

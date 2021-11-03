@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.getById(userId);
             user.setLogin(login);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(password));
             user.setName(name);
             user.setAge(age);
             user.setEmail(email);
@@ -173,9 +173,11 @@ public class UserServiceImpl implements UserService {
     public Profile getProfile(Long userId) {
         try {
             Profile profile = profileRepository.findByUserUserId(userId);
-            log.info("Get profile with userId = " + userId + "\n" + profile.toString());
+            if (profile != null) {
+                log.info("Get profile with userId = " + userId + "\n" + profile.toString());
+            }
             return profile;
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             log.error("Profile with userId = " + userId + " not found");
             throw new ProfileNotFoundException("Profile not found");
         }
@@ -186,8 +188,9 @@ public class UserServiceImpl implements UserService {
     public Role getUserRole(Long userId) {
         try {
             User user = userRepository.getById(userId);
-            log.info("Get user role by userId = " + userId + "\n" + user.getRole());
-            return user.getRole();
+            Role role = user.getRole();
+            log.info("Get user role by userId = " + userId + "\n" + role);
+            return role;
         } catch (Exception e) {
             log.error("Error getting user role by userId = " + userId);
             throw new UserNotFoundException("User not found");

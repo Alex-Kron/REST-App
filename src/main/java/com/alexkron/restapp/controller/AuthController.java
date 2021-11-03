@@ -4,6 +4,8 @@ import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.exception.JwtAuthException;
 import com.alexkron.restapp.security.JwtProvider;
 import com.alexkron.restapp.service.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Pattern;
 import java.util.HashMap;
 
+@Tag(name = "Authentication controller")
 @RestController
 @Slf4j
 @RequestMapping("/")
@@ -25,6 +28,8 @@ public class AuthController {
     @Autowired
     private JwtProvider jwtProvider;
 
+
+    @Operation(summary = "User authentication and token issuance")
     @SneakyThrows
     @PostMapping("auth/")
     @ResponseStatus(HttpStatus.ACCEPTED)

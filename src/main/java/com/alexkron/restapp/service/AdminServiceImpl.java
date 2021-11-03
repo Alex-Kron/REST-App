@@ -120,7 +120,7 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
     @SneakyThrows
     @Override
     public Page<User> getAllUsers(Integer age, String name, String phone, String email, int page, int count) {
-        //try {
+        try {
             LocalDate dateBefore;
             LocalDate dateAfter;
             if (age == null) {
@@ -134,9 +134,9 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
             Page<User> users = userRepository.findAllWithFilters(dateBefore, dateAfter, name, phone, email, pageable);
             log.info("Get users by filters count=" + users.getTotalElements());
             return users;
-        //} catch (Exception e) {
-            //log.error("Error getting users with filters");
-            //throw new SearchFailedException("List of users is not available");
-        //}
+        } catch (Exception e) {
+            log.error("Error getting users with filters");
+            throw new SearchFailedException("List of users is not available");
+        }
     }
 }

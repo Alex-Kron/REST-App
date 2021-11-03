@@ -37,11 +37,10 @@ public class AdminServiceTest {
     @MockBean
     PasswordEncoder passwordEncoder;
 
-    @Spy
-    @InjectMocks
+    @MockBean
     User user;
 
-    @Mock
+    @MockBean
     Role role;
 
     @Test
@@ -92,9 +91,9 @@ public class AdminServiceTest {
     @Test
     public void getAllUsersTest() {
         Pageable pageable = PageRequest.of(0, 1);
-        List<User> list = new ArrayList<User>();
+        List<User> list = new ArrayList<>();
         list.add(user);
-        Page<User> page = new PageImpl<User>(list);
+        Page<User> page = new PageImpl<>(list);
         Mockito.when(userRepository.findAllWithFilters(ArgumentMatchers.any(LocalDate.class),
                 ArgumentMatchers.any(LocalDate.class),
                 ArgumentMatchers.anyString(),

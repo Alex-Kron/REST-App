@@ -6,7 +6,6 @@ import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.service.AdminService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-//@Component
+@Component
 @Slf4j
 public class InitializationComponent {
-    //@Autowired
+    @Autowired
     private AdminService adminService;
 
     @SneakyThrows

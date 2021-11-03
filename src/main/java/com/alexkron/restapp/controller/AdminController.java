@@ -6,6 +6,10 @@ import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.exception.BadGetUsersRequestException;
 import com.alexkron.restapp.exception.ProfileIsAlreadyExistException;
 import com.alexkron.restapp.service.AdminService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -26,25 +30,33 @@ import java.util.HashMap;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Validated
+@Tag(name = "Administrator controller", description = "The controller implements actions available to users with the role ROLE_ADMIN")
 public class AdminController {
+    @Hidden
     @Autowired
     @Qualifier("AdminService")
     private AdminService adminService;
 
+    @Hidden
     @Min(1900)
     private Integer age;
 
+    @Hidden
     @Min(0)
     private int page;
 
+    @Hidden
     @Min(1)
     private int count;
 
+    @Operation(summary = "Get all users", description = "Returns the users page. 'page' and 'count' parameters are required. The parameters 'age' (year of birth), 'phone', 'name' (Name like)  and 'email' are filters (optional)")
     @SneakyThrows
     @GetMapping("/get/user/all/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Page<User> getAllUser(@RequestParam HashMap<String, String> parameters) {
+    Page<User> getAllUser(@RequestParam
+                          @Parameter(description = "Required parameters: page (value >= 0), count (value > 0). Optional parameters: name (like) , age (year), phone, email.")
+                                  HashMap<String, String> parameters) {
         String phone = "";
         String name = "";
         String email = "";
@@ -84,30 +96,34 @@ public class AdminController {
         return adminService.getAllUsers(age, name, phone, email, page, count);
     }
 
+    @Operation(summary = "Get User by id")
     @GetMapping("/get/user/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    User getUser(@RequestParam("id") @Min(value = 0) Long userId) {
+    User getUser(@RequestParam("id") @Min(value = 0) @Parameter(description = "User ID") Long userId) {
         log.info("ADMIN REQUEST: get user by id=" + userId);
         return adminService.getUser(userId);
     }
 
+    @Operation(summary = "Get Phone by phoneId")
     @GetMapping("/get/phone/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Phone getPhone(@RequestParam("phoneId") @Min(value = 0) Long phoneId) {
+    Phone getPhone(@RequestParam("phoneId") @Min(value = 0) @Parameter(description = "Phone ID") Long phoneId) {
         log.info("ADMIN REQUEST: get phone by id");
         return adminService.getPhone(phoneId);
     }
 
+    @Operation(summary = "Get profile by userId")
     @GetMapping("/get/profile/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Profile getProfile(@RequestParam("userId") @Min(value = 0) Long userId) {
+    Profile getProfile(@RequestParam("userId") @Min(value = 0) @Parameter(description = "User ID") Long userId) {
         log.info("ADMIN REQUEST: get profile by userId=" + userId);
         return adminService.getProfile(userId);
     }
 
+    @Operation(summary = "Update User by id")
     @PostMapping("/update/user/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
@@ -126,6 +142,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Update Phone by phoneId")
     @PostMapping("/update/phone/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
@@ -138,6 +155,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Update Profile by userId")
     @PostMapping("/update/profile/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
@@ -150,6 +168,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Create new User")
     @PostMapping("/set/user/")
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
@@ -173,10 +192,11 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Create new Phone for User by userId")
     @PostMapping("/set/phone/")
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    HashMap<String, Object> setPhone(@RequestParam("phoneId") @Min(value = 0) Long userId,
+    HashMap<String, Object> setPhone(@RequestParam("userId") @Min(value = 0) Long userId,
                                      @RequestParam("number") @Pattern(regexp = "\\+7\\d{10}") String number) {
         log.info("ADMIN REQUEST: set new phone");
         HashMap<String, Object> response = new HashMap<>();
@@ -188,6 +208,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Create new Profile for User by userId")
     @SneakyThrows
     @PostMapping("/set/profile/")
     @ResponseStatus(HttpStatus.CREATED)
@@ -196,18 +217,21 @@ public class AdminController {
                                        @RequestParam("cash") @DecimalMin(value = "0.0") @Digits(integer = 6, fraction = 2) BigDecimal cash) {
         log.info("ADMIN REQUEST: set new profile");
         HashMap<String, Object> response = new HashMap<>();
-        Profile profile = new Profile();
-        profile.setUser(adminService.getUser(userId));
-        profile.setCash(cash);
-        if (adminService.getProfile(profile.getUser().getUserId()) != null) {
+        User user = adminService.getUser(userId);
+        if (adminService.getProfile(userId) != null) {
             log.error("User already has a profile");
             throw new ProfileIsAlreadyExistException("User already has a profile");
         }
+        Profile profile = new Profile();
+        profile.setCash(cash);
+        profile.setUser(user);
+        //user.setProfile(profile);
         profile = adminService.setProfile(profile);
         response.put("CREATED", profile);
         return response;
     }
 
+    @Operation(summary = "Delete user by userId")
     @GetMapping("/remove/user/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
@@ -219,6 +243,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Delete phone by phoneId")
     @GetMapping("/remove/phone/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
@@ -230,6 +255,7 @@ public class AdminController {
         return response;
     }
 
+    @Operation(summary = "Delete profile by userId")
     @GetMapping("/remove/profile/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
