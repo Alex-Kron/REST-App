@@ -1,20 +1,23 @@
-package com.alexkron.restapp.util;
+package com.alexkron.restapp.init;
 
 import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.service.AdminService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 @Slf4j
+@Component
 public class InitializationComponent {
+    @Autowired
     private AdminService adminService;
 
     @SneakyThrows
-    @EventListener(ContextRefreshedEvent.class)
+    @PostConstruct
     public void contextRefreshedEvent() {
         User admin1 = new User();
         admin1.setLogin("admin1");

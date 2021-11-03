@@ -1,14 +1,11 @@
 package com.alexkron.restapp;
 
-import com.alexkron.restapp.entity.User;
-import com.alexkron.restapp.service.AdminService;
-import com.alexkron.restapp.service.AdminServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.time.LocalDate;
-
 @SpringBootApplication
+@Slf4j
 public class RestAppApplication {
 
     public static void main(String[] args) {

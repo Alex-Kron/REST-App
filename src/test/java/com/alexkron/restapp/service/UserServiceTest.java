@@ -7,6 +7,7 @@ import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.repository.PhoneRepository;
 import com.alexkron.restapp.repository.ProfileRepository;
 import com.alexkron.restapp.repository.UserRepository;
+import com.alexkron.restapp.init.InitializationComponent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,6 +55,9 @@ public class UserServiceTest {
 
     @MockBean
     Profile profile;
+
+    @MockBean
+    InitializationComponent initializationComponent;
 
     @Test
     public void setPhoneTest() {
