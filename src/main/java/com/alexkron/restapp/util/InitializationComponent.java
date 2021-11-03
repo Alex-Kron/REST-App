@@ -4,17 +4,13 @@ import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.service.AdminService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Component
 @Slf4j
 public class InitializationComponent {
-    @Autowired
     private AdminService adminService;
 
     @SneakyThrows
@@ -28,5 +24,6 @@ public class InitializationComponent {
         admin1.setEmail("admin1@email.com");
         adminService.setUser(admin1);
         adminService.setUserRole(admin1.getLogin(), adminService.getRoleByName("ROLE_ADMIN"));
+        log.info("Administrator user initialized: login=admin1, password=adminpas1");
     }
 }
