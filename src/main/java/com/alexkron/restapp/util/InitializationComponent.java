@@ -5,6 +5,8 @@ import com.alexkron.restapp.entity.Profile;
 import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.service.AdminService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -13,9 +15,10 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Component
+//@Component
+@Slf4j
 public class InitializationComponent {
-    @Autowired
+    //@Autowired
     private AdminService adminService;
 
     @SneakyThrows
@@ -28,7 +31,7 @@ public class InitializationComponent {
         admin1.setAge(LocalDate.of(1990, 12, 31));
         admin1.setEmail("admin1@email.com");
         adminService.setUser(admin1);
-        adminService.setUserRole(admin1.getLogin(), adminService.getRoleAdmin());
+        adminService.setUserRole(admin1.getLogin(), adminService.getRoleByName("ROLE_ADMIN"));
 
         User user1 = new User();
         user1.setLogin("user1");

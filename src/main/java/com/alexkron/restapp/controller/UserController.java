@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -53,11 +54,11 @@ public class UserController {
     @PostMapping("/update/user/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    User updateUser(@RequestParam("login") String login,
-                    @RequestParam("password") String password,
-                    @RequestParam("name") String name,
+    User updateUser(@RequestParam("login") @Pattern(regexp = "\\w{4,20}") String login,
+                    @RequestParam("password") @Pattern(regexp = ".{8,60}") String password,
+                    @RequestParam("name") @Pattern(regexp = "[А-Я][а-я]+\\s[А-Я][а-я]+\\s[А-Я][а-я]+") String name,
                     @RequestParam("age") String age,
-                    @RequestParam("email") String email,
+                    @RequestParam("email") @Email(message = "Email should be valid") String email,
                     HttpServletRequest request) {
         String oldLogin = jwtProvider.getLoginFromToken(jwtFilter.getTokenFromRequest(request));
         Long id = userService.getUserByLogin(oldLogin).getUserId();
@@ -68,9 +69,9 @@ public class UserController {
     @PostMapping("/update/phone/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Phone updatePhone(@RequestParam("phoneId") Long phoneId,
-          @RequestParam("phone") String newPhone,
-          HttpServletRequest request) {
+    Phone updatePhone(@RequestParam("phoneId") @Min(value = 0) Long phoneId,
+                      @RequestParam("phone") @Pattern(regexp = "\\+7\\d{10}") String newPhone,
+                      HttpServletRequest request) {
         String login = jwtProvider.getLoginFromToken(jwtFilter.getTokenFromRequest(request));
         Long userId = userService.getUserByLogin(login).getUserId();
         Phone phone = userService.getPhone(phoneId);
@@ -83,7 +84,7 @@ public class UserController {
     @PostMapping("/update/profile/")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Profile updateProfile(@RequestParam("cash")BigDecimal cash, HttpServletRequest request) {
+    Profile updateProfile(@RequestParam("cash") @DecimalMin(value = "0.0") @Digits(integer = 6, fraction = 2) BigDecimal cash, HttpServletRequest request) {
         String login = jwtProvider.getLoginFromToken(jwtFilter.getTokenFromRequest(request));
         Long userId = userService.getUserByLogin(login).getUserId();
         return userService.updateProfile(userId, cash);
@@ -91,7 +92,8 @@ public class UserController {
 
     @PostMapping("/set/phone/")
     @ResponseStatus(HttpStatus.CREATED)
-    public  @ResponseBody Phone setPhone(@RequestParam("phone") String number, HttpServletRequest request) {
+    public @ResponseBody
+    Phone setPhone(@RequestParam("phone") @Pattern(regexp = "\\+7\\d{10}") String number, HttpServletRequest request) {
         String login = jwtProvider.getLoginFromToken(jwtFilter.getTokenFromRequest(request));
         User user = userService.getUserByLogin(login);
         Phone phone = new Phone();
@@ -102,8 +104,9 @@ public class UserController {
 
     @PostMapping("/remove/phone/")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody HashMap<String, Object> removePhone(@RequestParam("phoneId") Long phoneId,
-                                                             HttpServletRequest request) throws PhoneNotFoundException {
+    public @ResponseBody
+    HashMap<String, Object> removePhone(@RequestParam("phoneId") @Min(value = 0) Long phoneId,
+                                        HttpServletRequest request) throws PhoneNotFoundException {
         String login = jwtProvider.getLoginFromToken(jwtFilter.getTokenFromRequest(request));
         User user = userService.getUserByLogin(login);
         Phone phone = userService.getPhone(phoneId);

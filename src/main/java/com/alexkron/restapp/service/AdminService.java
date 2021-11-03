@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AdminService extends UserService, UserDetailsService {
-    Page<User> getAllUsers(int page, int count);
 
     User setUserRole(String login, Role role);
 
@@ -19,7 +18,5 @@ public interface AdminService extends UserService, UserDetailsService {
 
     Role getRoleByName(String name);
 
-    Role getRoleAdmin() throws RoleNotFoundException;
-
-    Role getRoleUser();
+    Page<User> getAllUsers(Integer age, String name, String phone, String email, int page, int count);
 }

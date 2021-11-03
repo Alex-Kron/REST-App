@@ -3,6 +3,7 @@ package com.alexkron.restapp.service;
 import com.alexkron.restapp.entity.Role;
 import com.alexkron.restapp.entity.User;
 import com.alexkron.restapp.exception.RoleNotFoundException;
+import com.alexkron.restapp.exception.SearchFailedException;
 import com.alexkron.restapp.exception.UserNotFoundException;
 import com.alexkron.restapp.repository.RoleRepository;
 import com.alexkron.restapp.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 
 @Service
@@ -45,20 +47,6 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
 
     @SneakyThrows
     @Override
-    public Page<User> getAllUsers(int pageNum, int count) {
-        try {
-            Pageable page = PageRequest.of(pageNum, count);
-            Page<User> users = userRepository.findAll(page);
-            log.info("Get users (count = " + users.getTotalElements() + ")");
-            return users;
-        } catch (Exception e) {
-            log.error("Error getting the list of users");
-            throw new UserNotFoundException("User list is not available");
-        }
-    }
-
-    @SneakyThrows
-    @Override
     public User setUserRole(String login, Role role) {
         try {
             User user = userRepository.findByLogin(login);
@@ -77,7 +65,7 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
     public User setUser(User user) {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRole(getRoleUser());
+            user.setRole(getRoleByName("ROLE_USER"));
             User savedUser = userRepository.save(user);
             log.info("User successfully added:\n" + user.toString());
             return savedUser;
@@ -106,7 +94,6 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
     public User getUserByLoginAndPassword(String login, String password) {
         try {
             User user = userRepository.findByLogin(login);
-            assert user != null;
             if (passwordEncoder.matches(password, user.getPassword())) {
                 log.info("User by login=" + login + " and password=" + password + " successfully found");
                 return user;
@@ -121,26 +108,6 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
 
     @SneakyThrows
     @Override
-    public Role getRoleAdmin() {
-        Role role = roleRepository.findByRoleName("ROLE_ADMIN");
-        if (role == null) {
-            throw new RoleNotFoundException("Role not found");
-        }
-        return role;
-    }
-
-    @SneakyThrows
-    @Override
-    public Role getRoleUser() {
-        Role role = roleRepository.findByRoleName("ROLE_USER");
-        if (role == null) {
-            throw new RoleNotFoundException("Role not found");
-        }
-        return role;
-    }
-
-    @SneakyThrows
-    @Override
     public Role getRoleByName(String name) {
         try {
             return roleRepository.findByRoleName(name);
@@ -148,5 +115,28 @@ public class AdminServiceImpl extends UserServiceImpl implements AdminService, U
             log.error("Role by name=" + name + " not found");
             throw new RoleNotFoundException("Role not found");
         }
+    }
+
+    @SneakyThrows
+    @Override
+    public Page<User> getAllUsers(Integer age, String name, String phone, String email, int page, int count) {
+        //try {
+            LocalDate dateBefore;
+            LocalDate dateAfter;
+            if (age == null) {
+                dateBefore = LocalDate.of(1900, 1, 1);
+                dateAfter = LocalDate.now();
+            } else {
+                dateBefore = LocalDate.of(age - 1, 12, 31);
+                dateAfter = LocalDate.of(age + 1, 1, 1);
+            }
+            Pageable pageable = PageRequest.of(page, count);
+            Page<User> users = userRepository.findAllWithFilters(dateBefore, dateAfter, name, phone, email, pageable);
+            log.info("Get users by filters count=" + users.getTotalElements());
+            return users;
+        //} catch (Exception e) {
+            //log.error("Error getting users with filters");
+            //throw new SearchFailedException("List of users is not available");
+        //}
     }
 }

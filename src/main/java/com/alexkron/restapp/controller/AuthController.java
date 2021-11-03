@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Pattern;
 import java.util.HashMap;
 
 @RestController
@@ -28,8 +29,8 @@ public class AuthController {
     @PostMapping("auth/")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @ResponseBody
-    HashMap<String, String> auth(@RequestParam("login") String login,
-                                 @RequestParam("password") String password) {
+    HashMap<String, String> auth(@RequestParam("login") @Pattern(regexp = "\\w{4,20}") String login,
+                                 @RequestParam("password") @Pattern(regexp = ".{8,60}") String password) {
         try {
             User user = adminService.getUserByLoginAndPassword(login, password);
             assert user != null;

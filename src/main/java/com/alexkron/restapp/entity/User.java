@@ -1,7 +1,14 @@
 package com.alexkron.restapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -11,12 +18,13 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
+@Data
 @Entity
-@Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Jacksonized
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USERS")
 public class User {
     @Id
@@ -30,10 +38,12 @@ public class User {
     private String login;
 
     @Column(name = "PASSWORD", columnDefinition = "VARCHAR(60)", nullable = false)
-    @Pattern(regexp = ".{1,60}")
+    @NotBlank
+    @Pattern(regexp = ".{8,60}")
     private String password;
 
     @Column(name = "NAME", unique = true, columnDefinition = "VARCHAR(50)", nullable = false)
+    @NotBlank
     @Pattern(regexp = "[А-Я][а-я]+\\s[А-Я][а-я]+\\s[А-Я][а-я]+")
     private String name;
 
@@ -45,17 +55,13 @@ public class User {
     @Column(name = "EMAIL", unique = true, columnDefinition = "VARCHAR(50)", nullable = false)
     private String email;
 
- //   @OneToMany(cascade = CascadeType.ALL,
- //           mappedBy = "user", orphanRemoval = true)
- //   private List<Phone> phones = new ArrayList<>();
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     @ToString.Exclude
     @JsonIgnore
     private Profile profile;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID", nullable = false)
     @Valid
     private Role role;
