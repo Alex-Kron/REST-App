@@ -9,8 +9,6 @@ import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.Valid;
